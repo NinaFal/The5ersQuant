@@ -132,9 +132,15 @@ CONTRACT_SPECS = {
     # Silver: pip = 0.01, 5000oz/lot, pip value = $50/pip/lot
     "XAGUSD": {"pip_size": 0.01, "contract_size": 5000, "pip_value_per_lot": 50.0, "commission_per_lot": 4.0},
     
-    # Indices - NO commission, pip = 0.1 for display but we use $1/point
-    "SPX500USD": {"pip_size": 1.0, "contract_size": 1, "pip_value_per_lot": 1.0, "commission_per_lot": 0.0},
-    "NAS100USD": {"pip_size": 1.0, "contract_size": 1, "pip_value_per_lot": 1.0, "commission_per_lot": 0.0},
+    # Indices - NO commission, 5ers uses $20/point for NAS100, $10 for SP500/US30
+    "US30": {"pip_size": 1.0, "contract_size": 1, "pip_value_per_lot": 10.0, "commission_per_lot": 0.0},
+    "US100": {"pip_size": 1.0, "contract_size": 1, "pip_value_per_lot": 20.0, "commission_per_lot": 0.0},
+    "US500": {"pip_size": 1.0, "contract_size": 1, "pip_value_per_lot": 10.0, "commission_per_lot": 0.0},
+    "SP500": {"pip_size": 1.0, "contract_size": 1, "pip_value_per_lot": 10.0, "commission_per_lot": 0.0},  # 5ers
+    "NAS100": {"pip_size": 1.0, "contract_size": 1, "pip_value_per_lot": 20.0, "commission_per_lot": 0.0},  # 5ers
+    "UK100": {"pip_size": 1.0, "contract_size": 1, "pip_value_per_lot": 10.0, "commission_per_lot": 0.0},  # 5ers
+    "SPX500USD": {"pip_size": 1.0, "contract_size": 1, "pip_value_per_lot": 10.0, "commission_per_lot": 0.0},
+    "NAS100USD": {"pip_size": 1.0, "contract_size": 1, "pip_value_per_lot": 20.0, "commission_per_lot": 0.0},
     
     # Crypto - use point value, 1 BTC contract
     "BTCUSD": {"pip_size": 1.0, "contract_size": 1, "pip_value_per_lot": 1.0, "commission_per_lot": 0.0},
@@ -1008,8 +1014,11 @@ def load_trades(path: str) -> pd.DataFrame:
 def _load_single_symbol(args):
     """Load H1 data for a single symbol (for parallel processing)."""
     symbol, data_path = args
-    norm = normalize_symbol(symbol)
-    filepath = Path(data_path) / f"{norm}_H1_2014_2025.csv"
+    # Symbol already in OANDA format (EUR_USD), keep as is
+    # Try both naming patterns
+    filepath = Path(data_path) / f"{symbol}_H1_2014_2025.csv"
+    if not filepath.exists():
+        filepath = Path(data_path) / f"{symbol}_H1.csv"
     if filepath.exists():
         df = pd.read_csv(filepath)
         df['time'] = pd.to_datetime(df['time'])

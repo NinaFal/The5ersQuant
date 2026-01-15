@@ -141,7 +141,7 @@ TRAINING_QUARTERS = {
     "2024_Q3": (datetime(2024, 7, 1), datetime(2024, 9, 30)),
 }
 
-ACCOUNT_SIZE = 60000.0  # 5ers 60K High Stakes
+ACCOUNT_SIZE = 20000.0  # 5ers 20K High Stakes (changed from 60K for validation)
 
 DEFAULT_EXCLUDED_ASSETS: List[str] = []
 

@@ -65,12 +65,15 @@ CONTRACT_SPECS = {
     "XAUUSD": {"pip_value": 0.01, "contract_size": 100, "pip_location": 2, "commission_per_lot": 4.0, "type": "metal"},
     "XAGUSD": {"pip_value": 0.001, "contract_size": 5000, "pip_location": 3, "commission_per_lot": 4.0, "type": "metal"},
     
-    # Indices - NO commission (spread-based)
-    "US30": {"pip_value": 1.0, "contract_size": 1, "pip_location": 0, "commission_per_lot": 0.0, "type": "index"},
-    "US100": {"pip_value": 1.0, "contract_size": 1, "pip_location": 0, "commission_per_lot": 0.0, "type": "index"},
-    "US500": {"pip_value": 1.0, "contract_size": 1, "pip_location": 0, "commission_per_lot": 0.0, "type": "index"},
-    "SPX500USD": {"pip_value": 0.1, "contract_size": 1, "pip_location": 1, "commission_per_lot": 0.0, "type": "index"},
-    "NAS100USD": {"pip_value": 0.1, "contract_size": 1, "pip_location": 1, "commission_per_lot": 0.0, "type": "index"},
+    # Indices - NO commission (spread-based), 5ers: NAS100=$20/point, SP500=$10/point
+    "US30": {"pip_value": 10.0, "contract_size": 1, "pip_location": 0, "commission_per_lot": 0.0, "type": "index"},
+    "US100": {"pip_value": 20.0, "contract_size": 1, "pip_location": 0, "commission_per_lot": 0.0, "type": "index"},
+    "US500": {"pip_value": 10.0, "contract_size": 1, "pip_location": 0, "commission_per_lot": 0.0, "type": "index"},
+    "SP500": {"pip_value": 10.0, "contract_size": 1, "pip_location": 0, "commission_per_lot": 0.0, "type": "index"},  # 5ers
+    "NAS100": {"pip_value": 20.0, "contract_size": 1, "pip_location": 0, "commission_per_lot": 0.0, "type": "index"},  # 5ers
+    "UK100": {"pip_value": 10.0, "contract_size": 1, "pip_location": 0, "commission_per_lot": 0.0, "type": "index"},  # 5ers
+    "SPX500USD": {"pip_value": 10.0, "contract_size": 1, "pip_location": 0, "commission_per_lot": 0.0, "type": "index"},
+    "NAS100USD": {"pip_value": 20.0, "contract_size": 1, "pip_location": 0, "commission_per_lot": 0.0, "type": "index"},
     
     # Crypto - NO commission (spread-based)
     "BTCUSD": {"pip_value": 1.0, "contract_size": 1, "pip_location": 0, "commission_per_lot": 0.0, "type": "crypto"},
