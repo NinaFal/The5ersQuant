@@ -1702,6 +1702,7 @@ class LiveTradingBot:
                 stop_loss_price=sl,
                 max_lot=max_lot,
                 min_lot=min_lot,
+                broker="5ers",  # CRITICAL: Use 5ers contract specs ($1/point for indices)
             )
             
             if lot_result.get("error") or lot_result["lot_size"] <= 0:

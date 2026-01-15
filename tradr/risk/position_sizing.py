@@ -5,6 +5,7 @@ Calculates lot sizes based on risk parameters and contract specifications.
 """
 
 from typing import Dict, Optional
+import os
 
 
 # CONTRACT_SPECS aligned with simulate_main_live_bot.py
@@ -75,8 +76,34 @@ def normalize_symbol(symbol: str) -> str:
     return symbol.replace("_", "").replace(".", "").replace("/", "").upper()
 
 
-def get_contract_specs(symbol: str) -> Dict:
-    """Get contract specifications for a symbol."""
+def get_contract_specs(symbol: str, broker: str = None) -> Dict:
+    """
+    Get contract specifications for a symbol.
+    
+    Args:
+        symbol: Trading symbol
+        broker: Broker name (e.g., "5ers", "ftmo"). If None, uses default specs.
+        
+    Returns:
+        Contract specs dict
+    """
+    # Check if we should use 5ers-specific specs
+    if broker and "5ers" in broker.lower():
+        try:
+            from tradr.brokers.fiveers_specs import get_fiveers_contract_specs
+            return get_fiveers_contract_specs(symbol)
+        except ImportError:
+            pass  # Fall back to default specs
+    
+    # Also check environment variable
+    broker_env = os.getenv("BROKER", "").lower()
+    if "5ers" in broker_env or "fiveers" in broker_env:
+        try:
+            from tradr.brokers.fiveers_specs import get_fiveers_contract_specs
+            return get_fiveers_contract_specs(symbol)
+        except ImportError:
+            pass
+    
     normalized = normalize_symbol(symbol)
     return CONTRACT_SPECS.get(normalized, DEFAULT_SPEC)
 
@@ -114,6 +141,7 @@ def calculate_lot_size(
     confluence_scale_per_point: float = 0.15,
     max_confluence_multiplier: float = 1.5,
     min_confluence_multiplier: float = 0.6,
+    broker: str = None,
 ) -> Dict:
     """
     Calculate position size for a trade.
@@ -135,6 +163,7 @@ def calculate_lot_size(
         confluence_scale_per_point: Scale factor per confluence point above base
         max_confluence_multiplier: Maximum risk multiplier
         min_confluence_multiplier: Minimum risk multiplier
+        broker: Broker name (e.g., "5ers") for broker-specific specs
         
     Returns:
         Dict with lot_size, risk_usd, stop_pips, actual_risk_pct
@@ -148,7 +177,7 @@ def calculate_lot_size(
             "error": "Invalid entry or stop loss"
         }
     
-    specs = get_contract_specs(symbol)
+    specs = get_contract_specs(symbol, broker=broker)
     pip_size = specs.get("pip_size", 0.0001)
     pip_value_per_lot = specs.get("pip_value_per_lot", 10.0)
     
